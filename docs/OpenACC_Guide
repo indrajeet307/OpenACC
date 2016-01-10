@@ -1,0 +1,66 @@
+OpenACC_Guide
+
+# Using Profiling
+   use gprof for sequential code
+   use nvprof / nvvp for parallel code
+   
+   set *PGI_ACC_TIME* environment variable
+   add a flag *-Mprof=ccff* while compiling
+
+# Pragmas
+
+kernels | tries to analyze for data independence in the loops present in the current
+        | block and build kernel for device
+        | if no independence then no kernel function is generated
+        | works on a code block and tries to parallelize all the loops in the block
+        | stores data on the device for the entire block
+        | *usage* #pragma acc kernels
+
+parallel | region of code that will be parallelized acrroc OpenACC gangs
+         | should be specified before required loop
+         | relies on programmer to have correctly identified parallelism
+         | *usage* #pragma acc parallel ; use before a loop
+
+loop | gives additional information
+     | 1. Correctness
+     | private
+     | Tells the compiler that current loop requires its own copy of the listed variables
+     | So, different threads executing will not create race condition
+     | loop iterators and variables inside a loop are always private
+     | *usage*  private(variable)
+     | reduction
+     | Same as private but also reduces all of the private copies into one final result
+     | performs operator on the variable
+     | *usage* #pragma acc loop independent reduction(operator:variable)
+     | 2. Optimization [YET TO DISCUSS]
+
+routine | routine directive gives the compiler the necessary information about the function
+        | or subroutine and the loops it contains in order to parallelize the calling 
+        | parallel region
+        | *usage* #pragma acc routine seq ; can seq / parallel
+
+atomic | to get around with race conditions
+       | Supports following clauses
+       | 1. read
+       | No two iterations will read from the same region
+       | 2. write
+       | No two iterations will write to teh same region
+       | 3. update
+       | Combination of booth read and write
+       | 4. capture
+       | Performs an update but saves values calculated in that region to use in the code
+       | that follows
+       | *usage* #pragma acc atomic update
+
+# Best Practices
+Use following constructs in the code to get more optimized code
+const    | to use read-only memory
+restrict | to inform about [pointer aliasing]
+
+# References 
+
+Search for:
+   OpenACC Specification
+
+Links:
+   http://www.pgroup.com/lit/articles/insider/v4n2a1.htm
