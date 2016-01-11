@@ -6,7 +6,7 @@ void scount(int *A,unsigned int size,int *count)
 {
     for(int i=0;i<size;i++)
     {
-        if(A[i]/2 == 0) (*count)++;
+        if(A[i]%13 == 0) (*count)++;
     }
 }
 
@@ -15,11 +15,12 @@ int pcount(int *A,int size)
     int count = 0;
     #pragma acc enter data copyin(A[0:size])
     #pragma acc data present(A[0:size])
-    #pragma acc parallel loop reduction(+:count)
+    {}
+    /* #pragma acc parallel loop reduction(+:count)
     for(int i=0;i<size;i++)
     {
-        if(A[i]/2 == 0) count++;
-    }
+        if(A[i]%13 == 0) count++;
+    }*/
     return count;
 }
 void initMat(int *p, int size)
