@@ -1,0 +1,89 @@
+
+This info is given by pgaccelinfo command
+
+CUDA Driver Version:           6050
+NVRM version:                  NVIDIA UNIX x86_64 Kernel Module  340.96  Sun Nov  8 22:33:28 PST 2015
+
+Device Number:                 0
+Device Name:                   GeForce GT 525M
+Device Revision Number:        2.1
+Global Memory Size:            1073414144
+Number of Multiprocessors:     2
+Number of Cores:               64
+Concurrent Copy and Execution: Yes
+Total Constant Memory:         65536
+Total Shared Memory per Block: 49152
+Registers per Block:           32768
+Warp Size:                     32
+Maximum Threads per Block:     1024
+Maximum Block Dimensions:      1024, 1024, 64
+Maximum Grid Dimensions:       65535 x 65535 x 65535
+Maximum Memory Pitch:          2147483647B
+Texture Alignment:             512B
+Clock Rate:                    1200 MHz
+Execution Timeout:             Yes
+Integrated Device:             No
+Can Map Host Memory:           Yes
+Compute Mode:                  default
+Concurrent Kernels:            Yes
+ECC Enabled:                   No
+Memory Clock Rate:             900 MHz
+Memory Bus Width:              128 bits
+L2 Cache Size:                 131072 bytes
+Max Threads Per SMP:           1536
+Async Engines:                 1
+Unified Addressing:            Yes
+Managed Memory:                No
+PGI Compiler Option:           -ta=tesla:cc20
+
+==========================================================================================================
+
+This info is give by devicequery program
+
+../../../CUDA_CODE/samples/1_Utilities/deviceQuery/a.out Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+Detected 1 CUDA Capable device(s)
+
+Device 0: "GeForce GT 525M"
+  CUDA Driver Version / Runtime Version          6.5 / 5.5
+  CUDA Capability Major/Minor version number:    2.1
+  Total amount of global memory:                 1024 MBytes (1073414144 bytes)
+  ( 2) Multiprocessors, ( 48) CUDA Cores/MP:     96 CUDA Cores
+  GPU Max Clock rate:                            1200 MHz (1.20 GHz)
+  Memory Clock rate:                             900 Mhz
+  Memory Bus Width:                              128-bit
+  L2 Cache Size:                                 131072 bytes
+  Maximum Texture Dimension Size (x,y,z)         1D=(65536), 2D=(65536, 65535), 3D=(2048, 2048, 2048)
+  Maximum Layered 1D Texture Size, (num) layers  1D=(16384), 2048 layers
+  Maximum Layered 2D Texture Size, (num) layers  2D=(16384, 16384), 2048 layers
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total number of registers available per block: 32768
+  Warp size:                                     32
+  Maximum number of threads per multiprocessor:  1536
+  Maximum number of threads per block:           1024
+  Max dimension size of a thread block (x,y,z): (1024, 1024, 64)
+  Max dimension size of a grid size    (x,y,z): (65535, 65535, 65535)
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Concurrent copy and kernel execution:          Yes with 1 copy engine(s)
+  Run time limit on kernels:                     Yes
+  Integrated GPU sharing Host Memory:            No
+  Support host page-locked memory mapping:       Yes
+  Alignment requirement for Surfaces:            Yes
+  Device has ECC support:                        Disabled
+  Device supports Unified Addressing (UVA):      Yes
+  Device PCI Domain ID / Bus ID / location ID:   0 / 1 / 0
+  Compute Mode:
+     < Default (multiple host threads can use ::cudaSetDevice() with device simultaneously) >
+
+deviceQuery, 
+CUDA Driver = CUDART, 
+CUDA Driver Version = 6.5, 
+CUDA Runtime Version = 5.5, 
+NumDevs = 1, 
+Device0 = GeForce GT 525M
+
+Result = PASS
