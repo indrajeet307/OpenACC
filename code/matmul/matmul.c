@@ -26,6 +26,7 @@ double pmul(float* A,float* B,float *C,int wA,int hA,int wB)
     #pragma acc enter data create(C[0:hA * wB])
   
     #pragma acc data present(A[0:hA * wA], B[0:wA * wB], C[0:hA * wB])
+    #pragma acc kernels loop independent
     for (unsigned int i = 0; i < hA; ++i) {
         for (unsigned int j = 0; j < wB; ++j) {
             float sum = 0;
