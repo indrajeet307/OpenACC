@@ -2,14 +2,15 @@ COMPILER=pgcc
 DEBUGFLAG=-g
 PGIFLAGS=-Minfo -acc 
 PROFFLAGS=-pg
+KEEPCUDAFLAG= -Mcuda=keepgpu
 all: vecadd matmul oddeven trial
 vecadd: vecadd.c
-	pgcc -g -Minfo -acc -pg vecadd.c -o vecadd.out
+	$(COMPILER) $(DEBUGFLAG) $(PGIFLAGS) $(PROFFLAGS) vecadd.c -o vecadd.out
 matmul: matmul.c
-	pgcc -g -Minfo -acc -pg matmul.c -o matmul.out
+	$(COMPILER) $(DEBUGFLAG) $(PGIFLAGS) $(PROFFLAGS) matmul.c -o matmul.out
 oddeven: oddeven.c
-	pgcc -g -Minfo -acc -pg oddeven.c -o oddeven.out
+	$(COMPILER) $(DEBUGFLAG) $(PGIFLAGS) $(PROFFLAGS) $(KEEPCUDAFLAG) oddeven.c -o oddeven.out 
 trial: Trial.c
-	pgcc -g -Minfo -acc -pg Trial.c -o trial.out
+	$(COMPILER) $(DEBUGFLAG) $(PGIFLAGS) $(PROFFLAGS) Trial.c -o trial.out
 clean:
-	rm *.out
+	rm -f *.out *.s *.gpu *.o

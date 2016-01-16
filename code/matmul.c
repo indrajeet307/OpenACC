@@ -4,8 +4,6 @@
 
 double seqmul(float* A,float* B,float *C ,int AW,int AH,int BW)
 {
-    //struct timeval starttime,stoptime;
-    //gettimeofday(&starttime);
     for(int i=0;i<AH;i++){
         for(int j=0;j<BW;j++){
             float sum=0;
@@ -18,7 +16,6 @@ double seqmul(float* A,float* B,float *C ,int AW,int AH,int BW)
             
         }
     }
-    //gettimeofday(&stoptime);
     return 0;
 }
 /**/

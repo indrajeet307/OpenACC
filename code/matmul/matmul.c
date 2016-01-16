@@ -31,6 +31,7 @@ double pmul(float* A,float* B,float *C,int wA,int hA,int wB)
         #pragma acc loop independent
         for (unsigned int j = 0; j < wB; ++j) {
             float sum = 0;
+            #pragma acc loop independent reduction (+:sum)
             for (unsigned int k = 0; k < wA; ++k) {
                 float a = A[i * wA + k];
                 float b = B[k * wB + j];
