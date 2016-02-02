@@ -1,12 +1,7 @@
-CC=gcc
-DEBUG=-DDEBUG = 0
-GDB=-g
+all: genList
 
-all: trie.c reader
-	$(CC) $(GDB) trie.c -o trie.out
+genList: genList.c
+	gcc -g -pg trie.c genList.c -o genList.out
 
-reader: reader.c
-	$(CC) $(GDB) reader.c -o reader.out
-
-clean: 
-	rm -f *.out
+clean:
+	rm -rf *.out
