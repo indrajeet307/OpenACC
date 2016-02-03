@@ -10,7 +10,7 @@
 #include <string.h>
 #define MAX_WORDS 2048
 #define MAX_ALPHA 48 // allowed characters in a word
-enum {DOT=26, ORB, CRB, ONE, THREE, TWO, SIX, FOUR, COMMA,
+enum {DOT=26, ORB, CRB, ONE, THREE, TWO, SIX, FOUR, FIVE, COMMA,
         E8, S7, Z0, DASH}; //ORB : Open Rounded Bracket, CRB = Close Rounded Bracket
 inline int get_number_from_alpha(int x)
 {
@@ -30,6 +30,8 @@ inline int get_number_from_alpha(int x)
         return THREE;
     if( x == '4')
         return FOUR;
+    if( x == '5')
+        return FIVE;
     if( x == '6')
         return SIX;
     if( x == '7')
@@ -146,7 +148,6 @@ int add_word(char *word,int wsize)
         printf("PANIC: more than MAX_WORDS update, MAX_WORDS and run again \n");
         return -1;
     }
-
     for(  i=0;i < wsize;i++)
     {
         in = get_number_from_alpha(word[i]);
@@ -167,9 +168,7 @@ int add_word(char *word,int wsize)
         {
             temp[in].word_num = inc_numwords();
             val = temp[in].word_num;
-
             add_to_word_list(val, word, wsize); 
-
             return val;
         }
     }
