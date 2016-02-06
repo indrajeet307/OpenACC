@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include<errno.h>
 #define MAX_WORDS 2048
 #define MAX_ALPHA 48 // allowed characters in a word
 enum {DOT=26, ORB, CRB, ONE, THREE, TWO, SIX, FOUR, FIVE, COMMA,
@@ -227,6 +228,22 @@ int show_words()
     }
 }
  
+void putWords(char *filename)
+{
+    FILE *fp;
+    errno = 0;
+    fp = fopen(filename,"w+");
+    int i;
+    if(errno != 0)
+    {
+        printf("Error: %s",strerror(errno));
+    }
+    for ( i=0; i< get_numOpcodes(); i++)
+    {
+        fprintf(fp,"%d %s\n",g_word_list[i].Id,g_word_list[i].word);
+    }
+    close(fp);
+}
  /*
  int main()
  {
