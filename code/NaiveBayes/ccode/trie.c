@@ -70,7 +70,40 @@ struct garbage_coll{
 
 struct trie_node *g_trie;
 struct word_node *g_word_list;
+struct garbage_coll *g_garbage_coll;
 
+void add_to_pickup(void *ptr)
+{
+    struct garbage_coll *temp = (struct garbage_coll*) malloc (sizeof(struct garbage_coll));
+    temp->ptr = ptr;
+    temp->next = NULL;
+    if(g_garbage_coll ==NULL)
+    {
+        g_garbage_coll = temp;
+        return;
+    }
+    temp->next = g_garbage_coll;
+
+    g_garbage_coll = temp;
+}
+
+void clean()
+{
+    struct garbage_coll *temp, *prev;
+    temp = g_garbage_coll;
+    if(temp == NULL)
+        return;
+    while(temp->next!=NULL)
+    {
+        prev = temp;
+        temp = temp->next;
+        free(prev->ptr);
+        free(prev);
+    }
+    free(temp->ptr);
+    free(temp);
+    temp = prev = NULL;
+}
 inline void init_trie_level(struct trie_node * node)
 {
     int i = 0;
@@ -86,6 +119,7 @@ void init_trie()
     int i = 0;
     
     g_trie = (struct trie_node*) malloc(sizeof(struct trie_node)*MAX_ALPHA);
+    add_to_pickup((void*)g_trie);
     init_trie_level(g_trie);
     g_numwords = 0;
 }
@@ -98,6 +132,7 @@ void init_word_list()
 
 void init_ds()
 {
+    g_garbage_coll = NULL;
     init_trie();
     init_word_list();
 }
@@ -118,6 +153,7 @@ struct trie_node* add_trie_level()
 {
     struct trie_node *temp;
     temp = (struct trie_node*) malloc(sizeof(struct trie_node)*MAX_ALPHA);
+    add_to_pickup((void*)temp);
     init_trie_level(temp);
     return temp;
 }
@@ -133,10 +169,12 @@ struct trie_node* add_trie_level()
 void add_to_word_list(int val,char * word,int wsize)
 {
     char * tempword =  (char*) malloc(sizeof(char)*wsize+1);
+    add_to_pickup((void*)tempword);
     strncpy(tempword,word,wsize);
         tempword[wsize] =  '\0';
 
      struct word_node * node = ( struct word_node*) malloc(sizeof(struct word_node));
+    add_to_pickup((void*)node);
     node->word = tempword;
     node->Id = val;
     node->next = NULL;
@@ -254,7 +292,7 @@ int show_words()
 {
    int i=0; 
     struct word_node *temp = g_word_list;
-    for ( i=0; i< get_numOpcodes(); i++,temp=temp->next)
+    for ( i=0; i< get_numwords(); i++,temp=temp->next)
     {
         printf("[%d] == %s. \n",temp->Id,temp->word);
     }
@@ -272,15 +310,15 @@ void putWords(char *filename)
         printf("Error: %s",strerror(errno));
     }
     struct word_node *temp = g_word_list;
-    for ( i=0; i< get_numOpcodes(); i++,temp=temp->next)
+    for ( i=0; i< get_numwords(); i++,temp=temp->next)
     {
         fprintf(fp,"%d %s\n",temp->Id,temp->word);
     }
     close(fp);
 }
- /*
+/*
  int main()
- {
+{
     init_ds();
     if( find_word("ABHI",4) == -1)
         printf("%d ",add_word("ABHI",4));
@@ -296,6 +334,7 @@ void putWords(char *filename)
     printf("%d ",add_word("ABHI",4));
     else
         printf("Word exists");
+    clean();
     return 0;
  }
  */
