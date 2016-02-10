@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include<errno.h>
-#define MAX_WORDS 2048
+#define MAX_WORDS 2048 // no more required
 #define MAX_ALPHA 48 // allowed characters in a word
 enum {DOT=26, ORB, CRB, ONE, THREE, TWO, SIX, FOUR, FIVE, COMMA,
         E8, S7, Z0, DASH}; //ORB : Open Rounded Bracket, CRB = Close Rounded Bracket
@@ -52,15 +52,21 @@ inline int get_number_from_alpha(int x)
 
 unsigned int g_numwords;
 
-typedef struct trie_node{
+struct trie_node{
     struct trie_node *next;
     unsigned int word_num;
-}trie_node;
+};
 
-typedef struct word_node{
+struct word_node{
     char *word;
-    int  Id; 
-}word_node;
+    int  Id;
+    struct word_node *next;
+};
+
+struct garbage_coll{
+    void * ptr;
+    struct garbage_coll * next;
+};
 
 struct trie_node *g_trie;
 struct word_node *g_word_list;
@@ -79,14 +85,15 @@ void init_trie()
 {
     int i = 0;
     
-    g_trie = (trie_node*) malloc(sizeof(trie_node)*MAX_ALPHA);
+    g_trie = (struct trie_node*) malloc(sizeof(struct trie_node)*MAX_ALPHA);
     init_trie_level(g_trie);
     g_numwords = 0;
 }
 
 void init_word_list()
 {
-    g_word_list = (word_node*) calloc (sizeof(word_node),MAX_WORDS);
+    //g_word_list = (word_node*) calloc (sizeof(word_node),MAX_WORDS);
+    g_word_list = NULL;
 }
 
 void init_ds()
@@ -107,10 +114,10 @@ inline int inc_numwords()
     return x;
 }
 
-trie_node* add_trie_level()
+struct trie_node* add_trie_level()
 {
-    trie_node *temp;
-    temp = (trie_node*) malloc(sizeof(trie_node)*MAX_ALPHA);
+    struct trie_node *temp;
+    temp = (struct trie_node*) malloc(sizeof(struct trie_node)*MAX_ALPHA);
     init_trie_level(temp);
     return temp;
 }
@@ -125,11 +132,35 @@ trie_node* add_trie_level()
 */
 void add_to_word_list(int val,char * word,int wsize)
 {
-    char * temp =  (char*) malloc(sizeof(char)*wsize+1);
-    strncpy(temp,word,wsize);
-        temp[wsize] =  '\0';
-    g_word_list[val].word = temp ;
-    g_word_list[val].Id = val ;
+    char * tempword =  (char*) malloc(sizeof(char)*wsize+1);
+    strncpy(tempword,word,wsize);
+        tempword[wsize] =  '\0';
+
+     struct word_node * node = ( struct word_node*) malloc(sizeof(struct word_node));
+    node->word = tempword;
+    node->Id = val;
+    node->next = NULL;
+
+    struct word_node * temp = g_word_list;
+    if(temp == NULL)
+    {
+        g_word_list = node; 
+        return ;
+    }
+    while(temp->next != NULL && strcmp(node->word, temp->next->word) > 0 )
+        temp = temp->next;
+    if(temp->next == NULL)
+        temp->next = node;
+    else
+    {
+        node->next = temp->next;
+        temp->next = node;
+    }
+    //g_word_list[val].word = temp ;
+    //g_word_list[val].Id = val ;
+
+
+    
 }
 
 /*
@@ -142,7 +173,7 @@ void add_to_word_list(int val,char * word,int wsize)
 */
 int add_word(char *word,int wsize)
 {
-    trie_node *temp = g_trie;
+    struct trie_node *temp = g_trie;
     int val,i,in;
     if( MAX_WORDS-1 == get_numwords())
     {
@@ -186,7 +217,7 @@ int add_word(char *word,int wsize)
 int find_word(char *word,int wsize)
 {
     int i,in;
-    trie_node *temp = g_trie;
+    struct trie_node *temp = g_trie;
     for( i=0;i < wsize;i++)
     {
         in = get_number_from_alpha(word[i]);
@@ -221,11 +252,13 @@ int find_word(char *word,int wsize)
 */
 int show_words()
 {
-    int i=0;
-    for( i=0 ; i<get_numwords(); i++)
+   int i=0; 
+    struct word_node *temp = g_word_list;
+    for ( i=0; i< get_numOpcodes(); i++,temp=temp->next)
     {
-        printf("[%d] == %s. \n",g_word_list[i].Id,g_word_list[i].word);
+        printf("[%d] == %s. \n",temp->Id,temp->word);
     }
+    
 }
  
 void putWords(char *filename)
@@ -238,9 +271,10 @@ void putWords(char *filename)
     {
         printf("Error: %s",strerror(errno));
     }
-    for ( i=0; i< get_numOpcodes(); i++)
+    struct word_node *temp = g_word_list;
+    for ( i=0; i< get_numOpcodes(); i++,temp=temp->next)
     {
-        fprintf(fp,"%d %s\n",g_word_list[i].Id,g_word_list[i].word);
+        fprintf(fp,"%d %s\n",temp->Id,temp->word);
     }
     close(fp);
 }
